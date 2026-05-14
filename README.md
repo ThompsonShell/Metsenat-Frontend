@@ -4,7 +4,7 @@
 
 ## Texnologiyalar
 
-- Next.js 14 + TypeScript
+- Next.js 15 + TypeScript
 - Tailwind CSS
 - Axios (interceptor + token refresh)
 - React Hook Form + Zod
