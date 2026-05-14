@@ -1,6 +1,6 @@
 # Metsenat Frontend
 
-`ThompsonShell/Metsenat` backend API uchun Next.js 14 (App Router) frontend.
+`ThompsonShell/Metsenat` backend API uchun Next.js 15 (App Router) frontend.
 
 ## Texnologiyalar
 
@@ -10,22 +10,38 @@
 - React Hook Form + Zod
 - Zustand (auth state)
 
-## Ishga tushirish
+## Loyihani clone qilish va ishga tushirish
+
+### 1. Repozitoriyani clone qiling
+
+```bash
+git clone https://github.com/ThompsonShell/Metsenat-Frontend.git
+cd Metsenat-Frontend
+```
+
+### 2. Dependencylarni o'rnating
 
 ```bash
 npm install
-npm run dev
 ```
 
-App: `http://localhost:3000`
+### 3. Environment variables sozlang
 
-## Environment variables
-
-Loyihaning root qismida `.env.local` yarating:
+Loyihaning root qismida `.env.local` fayl yarating va quyidagi o'zgaruvchini qo'shing:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
+
+> **Eslatma:** Backend (`ThompsonShell/Metsenat`) ishlaб turgan bo'lishi kerak. Backend API URL ni shunga mos ravishda o'zgartiring.
+
+### 4. Dev serverni ishga tushiring
+
+```bash
+npm run dev
+```
+
+App: `http://localhost:3000`
 
 ## Auth oqimi
 
