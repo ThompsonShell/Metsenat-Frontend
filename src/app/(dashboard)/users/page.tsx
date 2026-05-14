@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { TBody, THead, Table } from '@/components/ui/Table';
 import { useUsers } from '@/hooks/useUsers';
@@ -14,12 +14,6 @@ export default function UsersPage() {
   const [page, setPage] = useState(1);
 
   const { users, loading, error } = useUsers({ role, degree, university, search, page });
-
-  const paginated = useMemo(() => {
-    const pageSize = 10;
-    const start = (page - 1) * pageSize;
-    return users.slice(start, start + pageSize);
-  }, [users, page]);
 
   return (
     <div className="space-y-4">
@@ -44,7 +38,7 @@ export default function UsersPage() {
             </tr>
           </THead>
           <TBody>
-            {paginated.map((user) => (
+            {users.map((user) => (
               <tr key={user.id}>
                 <td className="px-3 py-2">{user.phone_number}</td>
                 <td className="px-3 py-2">{user.first_name}</td>
