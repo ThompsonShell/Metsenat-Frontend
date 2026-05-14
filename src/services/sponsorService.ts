@@ -1,5 +1,6 @@
 import { api } from '@/lib/api';
 import { StudentSponsor } from '@/types';
+import { isAxiosError } from 'axios';
 
 export interface SponsorFilters {
   sponsor?: string;
@@ -31,11 +32,29 @@ export const sponsorService = {
   },
 
   update: async (id: string | number, payload: Partial<SponsorPayload>) => {
+    try {
+      const { data } = await api.patch<StudentSponsor>(`/sponsors/${id}/update`, payload);
+      return data;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     const { data } = await api.patch<StudentSponsor>(`/sponsors/${id}update`, payload);
     return data;
   },
 
   delete: async (id: string | number) => {
+    try {
+      await api.delete(`/sponsors/${id}/delete`);
+      return;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     await api.delete(`/sponsors/${id}delete`);
   },
 };

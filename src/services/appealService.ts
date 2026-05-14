@@ -1,5 +1,6 @@
 import { api } from '@/lib/api';
 import { Appeal } from '@/types';
+import { isAxiosError } from 'axios';
 
 export interface AppealFilters {
   sponsor?: string;
@@ -37,11 +38,29 @@ export const appealService = {
   },
 
   update: async (id: string | number, payload: Partial<AppealPayload>) => {
+    try {
+      const { data } = await api.patch<Appeal>(`/appeals/${id}/update`, payload);
+      return data;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     const { data } = await api.patch<Appeal>(`/appeals/${id}update`, payload);
     return data;
   },
 
   delete: async (id: string | number) => {
+    try {
+      await api.delete(`/appeals/${id}/delete`);
+      return;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     await api.delete(`/appeals/${id}delete`);
   },
 };

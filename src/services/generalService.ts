@@ -1,5 +1,6 @@
 import { api } from '@/lib/api';
 import { PaymentMethod, University } from '@/types';
+import { isAxiosError } from 'axios';
 
 type UniversityPayload = {
   name: string;
@@ -19,11 +20,29 @@ export const generalService = {
   },
 
   updateUniversity: async (id: number, payload: Partial<UniversityPayload>) => {
+    try {
+      const { data } = await api.patch<University>(`/general/${id}/update`, payload);
+      return data;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     const { data } = await api.patch<University>(`/general/${id}update`, payload);
     return data;
   },
 
   deleteUniversity: async (id: number) => {
+    try {
+      await api.delete(`/general/${id}/delete`);
+      return;
+    } catch (error) {
+      if (!isAxiosError(error) || error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
     await api.delete(`/general/${id}delete`);
   },
 
