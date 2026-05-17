@@ -1,8 +1,8 @@
 # Metsenat Frontend
 
-`ThompsonShell/Metsenat` backend API uchun Next.js 15 (App Router) frontend.
+Next.js 15 (App Router) frontend for the `ThompsonShell/Metsenat` backend API.
 
-## Texnologiyalar
+## Technologies
 
 - Next.js 15 + TypeScript
 - Tailwind CSS
@@ -10,32 +10,32 @@
 - React Hook Form + Zod
 - Zustand (auth state)
 
-## Loyihani clone qilish va ishga tushirish
+## Cloning and Running the Project
 
-### 1. Repozitoriyani clone qiling
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/ThompsonShell/Metsenat-Frontend.git
 cd Metsenat-Frontend
 ```
 
-### 2. Dependencylarni o'rnating
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Environment variables sozlang
+### 3. Configure environment variables
 
-Loyihaning root qismida `.env.local` fayl yarating va quyidagi o'zgaruvchini qo'shing:
+Create a `.env.local` file in the root of the project and add the following variable:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 ```
 
-> **Eslatma:** Backend (`ThompsonShell/Metsenat`) ishlaб turgan bo'lishi kerak. Backend API URL ni shunga mos ravishda o'zgartiring.
+> **Note:** The backend (`ThompsonShell/Metsenat`) must be running. Update the backend API URL accordingly.
 
-### 4. Dev serverni ishga tushiring
+### 4. Start the dev server
 
 ```bash
 npm run dev
@@ -43,22 +43,22 @@ npm run dev
 
 App: `http://localhost:3000`
 
-## Auth oqimi
+## Auth Flow
 
-1. `/login` sahifasida telefon raqam kiritiladi (`+998XXXXXXXXX`)
-2. OTP yuboriladi (`/authentication/send-verification-code/`)
-3. OTP bilan login (`/authentication/userlogin/`)
-4. `access_token` va `refresh_token` localStorage ga saqlanadi, `access_token` cookie ga ham yoziladi
-5. Dashboard route group auth guard bilan himoyalangan
+1. Phone number is entered on the `/login` page (`+998XXXXXXXXX`)
+2. OTP is sent (`/authentication/send-verification-code/`)
+3. Login with OTP (`/authentication/userlogin/`)
+4. `access_token` and `refresh_token` are stored in localStorage; `access_token` is also written to a cookie
+5. Dashboard route group is protected by an auth guard
 
-## API integratsiya
+## API Integration
 
-- `src/lib/api.ts` — Axios instance va interceptors
-  - Request interceptor: `Authorization: Bearer <token>` qo'shadi
-  - Response interceptor: 401 bo'lsa refresh endpoint orqali tokenni yangilaydi, muvaffaqiyatsiz bo'lsa logout qiladi
-- `src/services/*` — endpointlar bo'yicha servislar
+- `src/lib/api.ts` — Axios instance and interceptors
+  - Request interceptor: adds `Authorization: Bearer <token>`
+  - Response interceptor: on 401, refreshes the token via the refresh endpoint; logs out on failure
+- `src/services/*` — services organized by endpoint
 
-## Loyiha strukturasi
+## Project Structure
 
 ```text
 src/
@@ -89,17 +89,17 @@ src/
 └── types/
 ```
 
-## Sahifalar
+## Pages
 
-- `/login` — 2-qadamli auth
-- `/dashboard` — umumiy statistikalar
-- `/users` — userlar jadvali, filter/search, pagination
-- `/appeals` va `/appeals/[id]` — arizalar ro'yxati va tahrirlash
-- `/sponsors` va `/sponsors/[id]` — sponsor biriktirishlar
-- `/universities` — universitetlar CRUD
-- `/payment-methods` — to'lov usullari ro'yxati va qo'shish
+- `/login` — 2-step auth
+- `/dashboard` — general statistics
+- `/users` — users table with filter/search and pagination
+- `/appeals` and `/appeals/[id]` — applications list and editing
+- `/sponsors` and `/sponsors/[id]` — sponsor assignments
+- `/universities` — universities CRUD
+- `/payment-methods` — payment methods list and adding
 
-## Build va lint
+## Build and Lint
 
 ```bash
 npm run lint
