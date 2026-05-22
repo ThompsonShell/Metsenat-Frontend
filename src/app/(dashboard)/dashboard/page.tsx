@@ -21,7 +21,7 @@ function StatCard({ title, value, icon, iconBg, iconColor }: StatCardProps) {
       </div>
       <div>
         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</p>
-        <p className="mt-0.5 text-2xl font-bold text-gray-900">{value.toLocaleString()}</p>
+        <p className="mt-0.5 text-2xl font-bold text-gray-900">{value.toLocaleString('uz-UZ')}</p>
       </div>
     </div>
   );
