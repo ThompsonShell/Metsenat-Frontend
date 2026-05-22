@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { ArrowLeft, Phone, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { UZ_PHONE_REGEX } from '@/lib/auth';
@@ -16,7 +17,7 @@ const phoneSchema = z.object({
 });
 
 const codeSchema = z.object({
-  auth_code: z.string().regex(/^\d{4}$/, 'Kod 4 raqamdan iborat bo\'lishi kerak'),
+  auth_code: z.string().regex(/^\d{4}$/, "Kod 4 raqamdan iborat bo'lishi kerak"),
 });
 
 export function LoginForm() {
@@ -41,7 +42,6 @@ export function LoginForm() {
       await authService.sendVerificationCode(values.phone_number);
       setPhone(values.phone_number);
       setStep(2);
-      alert('Tasdiqlash kodi yuborildi');
     } catch {
       alert('Kod yuborishda xatolik yuz berdi');
     } finally {
@@ -63,38 +63,96 @@ export function LoginForm() {
   });
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-lg bg-white p-6 shadow">
-      <h2 className="mb-4 text-xl font-semibold">Kirish</h2>
+    <div className="w-full max-w-sm">
+      {/* Logo */}
+      <div className="mb-8 flex flex-col items-center">
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-lg">
+          <span className="text-xl font-bold">M</span>
+        </div>
+        <h1 className="text-2xl font-bold text-gray-900">Metsenat</h1>
+        <p className="mt-1 text-sm text-gray-500">Admin panel</p>
+      </div>
 
-      {step === 1 ? (
-        <form onSubmit={sendCode} className="space-y-3">
-          <label className="block text-sm">Telefon raqam</label>
-          <Input {...phoneForm.register('phone_number')} maxLength={13} placeholder="+998901234567" />
-          {phoneForm.formState.errors.phone_number && (
-            <p className="text-sm text-red-600">{phoneForm.formState.errors.phone_number.message}</p>
-          )}
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Yuborilmoqda...' : 'OTP yuborish'}
-          </Button>
-        </form>
-      ) : (
-        <form onSubmit={login} className="space-y-3">
-          <p className="text-sm text-gray-600">Kod yuborilgan raqam: {phone}</p>
-          <label className="block text-sm">4 xonali kod</label>
-          <Input {...codeForm.register('auth_code')} maxLength={4} inputMode="numeric" />
-          {codeForm.formState.errors.auth_code && (
-            <p className="text-sm text-red-600">{codeForm.formState.errors.auth_code.message}</p>
-          )}
-          <div className="flex gap-2">
-            <Button type="button" variant="secondary" onClick={() => setStep(1)} className="w-full">
-              Orqaga
-            </Button>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Kutilmoqda...' : 'Kirish'}
-            </Button>
-          </div>
-        </form>
-      )}
+      {/* Card */}
+      <div className="rounded-2xl bg-white p-8 shadow-card border border-gray-100">
+        {step === 1 ? (
+          <>
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Tizimga kirish</h2>
+              <p className="mt-1 text-sm text-gray-500">Telefon raqamingizni kiriting</p>
+            </div>
+            <form onSubmit={sendCode} className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                  Telefon raqam
+                </label>
+                <div className="relative">
+                  <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    {...phoneForm.register('phone_number')}
+                    maxLength={13}
+                    placeholder="+998901234567"
+                    className="pl-9"
+                  />
+                </div>
+                {phoneForm.formState.errors.phone_number && (
+                  <p className="mt-1.5 text-xs text-red-500">
+                    {phoneForm.formState.errors.phone_number.message}
+                  </p>
+                )}
+              </div>
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? 'Yuborilmoqda...' : 'Kodni yuborish'}
+              </Button>
+            </form>
+          </>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Kodni kiriting</h2>
+              <p className="mt-1 text-sm text-gray-500">
+                <span className="font-medium text-brand">{phone}</span> raqamiga kod yuborildi
+              </p>
+            </div>
+            <form onSubmit={login} className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                  4 xonali kod
+                </label>
+                <div className="relative">
+                  <KeyRound size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <Input
+                    {...codeForm.register('auth_code')}
+                    maxLength={4}
+                    inputMode="numeric"
+                    placeholder="0000"
+                    className="pl-9 tracking-widest text-center text-lg"
+                  />
+                </div>
+                {codeForm.formState.errors.auth_code && (
+                  <p className="mt-1.5 text-xs text-red-500">
+                    {codeForm.formState.errors.auth_code.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setStep(1)}
+                  className="flex items-center gap-1.5"
+                >
+                  <ArrowLeft size={15} />
+                  Orqaga
+                </Button>
+                <Button type="submit" disabled={loading} className="flex-1">
+                  {loading ? 'Kutilmoqda...' : 'Kirish'}
+                </Button>
+              </div>
+            </form>
+          </>
+        )}
+      </div>
     </div>
   );
 }

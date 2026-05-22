@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { SponsorForm } from '@/components/forms/SponsorForm';
 import { sponsorService } from '@/services/sponsorService';
 import { StudentSponsor } from '@/types';
@@ -27,30 +28,36 @@ export default function SponsorDetailPage() {
   }, [load]);
 
   if (loading) {
-    return <div>Yuklanmoqda...</div>;
+    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">Yuklanmoqda...</div>;
   }
 
   if (!data) {
-    return <div>Topilmadi</div>;
+    return <div className="rounded-xl bg-white p-6 text-sm text-gray-500">Topilmadi</div>;
   }
 
   return (
-    <div className="space-y-4 rounded-lg bg-white p-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Sponsor #{data.id}</h2>
-        <Link href="/sponsors" className="rounded border px-3 py-1">
-          Orqaga
+    <div className="space-y-5">
+      <div className="flex items-center gap-3">
+        <Link
+          href="/sponsors"
+          className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition"
+        >
+          <ArrowLeft size={16} />
         </Link>
+        <h2 className="text-xl font-semibold text-gray-900">Sponsor #{data.id}</h2>
       </div>
-      <SponsorForm
-        sponsorId={data.id}
-        onSuccess={load}
-        initialValues={{
-          sponsor: data.sponsor?.id,
-          student: data.student?.id,
-          amount: Number(data.amount),
-        }}
-      />
+
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-card">
+        <SponsorForm
+          sponsorId={data.id}
+          onSuccess={load}
+          initialValues={{
+            sponsor: data.sponsor?.id,
+            student: data.student?.id,
+            amount: Number(data.amount),
+          }}
+        />
+      </div>
     </div>
   );
 }
