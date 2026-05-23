@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { Plus, Trash2, Eye } from 'lucide-react';
 import { SponsorForm } from '@/components/forms/SponsorForm';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -26,7 +27,7 @@ export default function SponsorsPage() {
   });
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Ma\'lumotni o\'chirasizmi?')) {
+    if (!confirm("Ma'lumotni o'chirasizmi?")) {
       return;
     }
 
@@ -34,59 +35,82 @@ export default function SponsorsPage() {
       await sponsorService.delete(id);
       refetch();
     } catch {
-      alert('O\'chirishda xatolik');
+      alert("O'chirishda xatolik");
     }
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Sponsorlar</h2>
-        <Button onClick={() => setOpenCreate(true)}>Qo&apos;shish</Button>
+        <h2 className="text-xl font-semibold text-gray-900">Sponsorlar</h2>
+        <Button onClick={() => setOpenCreate(true)} className="flex items-center gap-1.5">
+          <Plus size={15} />
+          Qo&apos;shish
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-4">
-        <Input placeholder="Sponsor ID" value={sponsor} onChange={(event) => setSponsor(event.target.value)} />
-        <Input placeholder="Student ID" value={student} onChange={(event) => setStudent(event.target.value)} />
-        <Input placeholder="Amount >=" value={amountFrom} onChange={(event) => setAmountFrom(event.target.value)} />
-        <Input placeholder="Amount <=" value={amountTo} onChange={(event) => setAmountTo(event.target.value)} />
-      </div>
+      <div className="rounded-xl bg-white border border-gray-100 shadow-card">
+        <div className="grid grid-cols-1 gap-3 p-4 md:grid-cols-4 border-b border-gray-50">
+          <Input placeholder="Sponsor ID" value={sponsor} onChange={(e) => setSponsor(e.target.value)} />
+          <Input placeholder="Talaba ID" value={student} onChange={(e) => setStudent(e.target.value)} />
+          <Input placeholder="Summa >=" value={amountFrom} onChange={(e) => setAmountFrom(e.target.value)} />
+          <Input placeholder="Summa <=" value={amountTo} onChange={(e) => setAmountTo(e.target.value)} />
+        </div>
 
-      {loading && <div className="rounded bg-white p-4">Yuklanmoqda...</div>}
-      {error && <div className="rounded bg-red-50 p-4 text-red-700">{error}</div>}
+        {loading && (
+          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Yuklanmoqda...</div>
+        )}
+        {error && (
+          <div className="m-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
+        )}
 
-      <div className="overflow-auto rounded-lg border border-gray-200 bg-white">
-        <Table>
-          <THead>
-            <tr>
-              {['Sponsor', 'Student', 'Amount', 'Created at', 'Actions'].map((head) => (
-                <th key={head} className="px-3 py-2 text-left font-medium text-gray-600">
-                  {head}
-                </th>
-              ))}
-            </tr>
-          </THead>
-          <TBody>
-            {sponsors.map((item) => (
-              <tr key={item.id}>
-                <td className="px-3 py-2">{item.sponsor?.phone_number || '-'}</td>
-                <td className="px-3 py-2">{item.student?.phone_number || '-'}</td>
-                <td className="px-3 py-2">{item.amount}</td>
-                <td className="px-3 py-2">{formatDate(item.created_at)}</td>
-                <td className="px-3 py-2">
-                  <div className="flex gap-2">
-                    <Link href={`/sponsors/${item.id}`} className="rounded border px-2 py-1 text-xs">
-                      View
-                    </Link>
-                    <button className="rounded border border-red-300 px-2 py-1 text-xs text-red-700" onClick={() => handleDelete(item.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-auto">
+          <Table>
+            <THead>
+              <tr>
+                {['#', 'Sponsor', 'Talaba', 'Summa', 'Sana', 'Amallar'].map((head) => (
+                  <th key={head} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    {head}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </TBody>
-        </Table>
+            </THead>
+            <TBody>
+              {sponsors.map((item, idx) => (
+                <tr key={item.id} className="hover:bg-gray-50/60 transition-colors">
+                  <td className="px-4 py-3 text-sm text-gray-400">{idx + 1}</td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900">{item.sponsor?.phone_number || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700">{item.student?.phone_number || '—'}</td>
+                  <td className="px-4 py-3 text-sm text-gray-700">{item.amount}</td>
+                  <td className="px-4 py-3 text-sm text-gray-500">{formatDate(item.created_at)}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1.5">
+                      <Link
+                        href={`/sponsors/${item.id}`}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:border-brand hover:text-brand transition"
+                      >
+                        <Eye size={13} />
+                      </Link>
+                      <button
+                        className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:border-red-300 hover:text-red-500 transition"
+                        onClick={() => handleDelete(item.id)}
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {!loading && sponsors.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
+                    Sponsorlar topilmadi
+                  </td>
+                </tr>
+              )}
+            </TBody>
+          </Table>
+        </div>
       </div>
 
       <Modal open={openCreate} onClose={() => setOpenCreate(false)} title="Sponsor qo&apos;shish">
