@@ -4,6 +4,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { Appeal } from '@/types';
 import { AppealFilters, appealService } from '@/services/appealService';
 
+/**
+ * React hook that fetches and manages a list of appeals.
+ *
+ * Re-fetches automatically whenever `filters` changes.
+ *
+ * @param filters - Query parameters forwarded to the appeals list API.
+ * @returns An object containing:
+ *   - `appeals`  – the current list of appeals (empty array while loading).
+ *   - `loading`  – `true` while the request is in flight.
+ *   - `error`    – a user-facing error message, or `null` on success.
+ *   - `refetch`  – a stable callback to manually trigger a re-fetch.
+ */
 export function useAppeals(filters: AppealFilters) {
   const [appeals, setAppeals] = useState<Appeal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +28,7 @@ export function useAppeals(filters: AppealFilters) {
       const data = await appealService.list(filters);
       setAppeals(data);
     } catch {
-      setError('Arizalarni yuklashda xatolik yuz berdi');
+      setError('Failed to load appeals');
     } finally {
       setLoading(false);
     }

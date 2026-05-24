@@ -7,12 +7,20 @@ import { useUsers } from '@/hooks/useUsers';
 import { DEGREE_LABELS, ROLE_LABELS, USER_TYPE_LABELS } from '@/types';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+/** Tailwind badge classes applied per role value. */
 const ROLE_COLORS: Record<number, string> = {
   1: 'bg-purple-50 text-purple-700',
   2: 'bg-blue-50 text-blue-700',
   3: 'bg-emerald-50 text-emerald-700',
 };
 
+/**
+ * Users list page.
+ *
+ * Provides filter inputs (search, role, degree, university) and a paginated
+ * data table. Pagination is client-driven: the `page` state is forwarded to
+ * the API which returns the corresponding page of results.
+ */
 export default function UsersPage() {
   const [role, setRole] = useState('');
   const [degree, setDegree] = useState('');
@@ -25,19 +33,19 @@ export default function UsersPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">Foydalanuvchilar</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Users</h2>
       </div>
 
       <div className="rounded-xl bg-white border border-gray-100 shadow-card">
         <div className="grid grid-cols-1 gap-3 p-4 md:grid-cols-4 border-b border-gray-50">
-          <Input placeholder="Telefon qidirish" value={search} onChange={(e) => setSearch(e.target.value)} />
-          <Input placeholder="Rol (1/2/3)" value={role} onChange={(e) => setRole(e.target.value)} />
-          <Input placeholder="Daraja (1/2/3)" value={degree} onChange={(e) => setDegree(e.target.value)} />
-          <Input placeholder="Universitet ID" value={university} onChange={(e) => setUniversity(e.target.value)} />
+          <Input placeholder="Search by phone" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <Input placeholder="Role (1/2/3)" value={role} onChange={(e) => setRole(e.target.value)} />
+          <Input placeholder="Degree (1/2/3)" value={degree} onChange={(e) => setDegree(e.target.value)} />
+          <Input placeholder="University ID" value={university} onChange={(e) => setUniversity(e.target.value)} />
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Yuklanmoqda...</div>
+          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Loading...</div>
         )}
         {error && (
           <div className="m-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
@@ -47,7 +55,7 @@ export default function UsersPage() {
           <Table>
             <THead>
               <tr>
-                {['#', 'Telefon', 'Ism', 'Familiya', 'Rol', 'Tur', 'Daraja', 'Balans', 'Mavjud', 'Universitet'].map((head) => (
+                {['#', 'Phone', 'First Name', 'Last Name', 'Role', 'Type', 'Degree', 'Balance', 'Available', 'University'].map((head) => (
                   <th key={head} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     {head}
                   </th>
@@ -76,7 +84,7 @@ export default function UsersPage() {
               {!loading && users.length === 0 && (
                 <tr>
                   <td colSpan={10} className="px-4 py-10 text-center text-sm text-gray-400">
-                    Ma&apos;lumot topilmadi
+                    No records found
                   </td>
                 </tr>
               )}
@@ -85,7 +93,7 @@ export default function UsersPage() {
         </div>
 
         <div className="flex items-center justify-between border-t border-gray-50 px-4 py-3">
-          <span className="text-xs text-gray-400">{users.length} ta natija</span>
+          <span className="text-xs text-gray-400">{users.length} results</span>
           <div className="flex items-center gap-1">
             <button
               className="flex h-7 w-7 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-40 transition"

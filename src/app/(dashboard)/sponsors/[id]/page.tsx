@@ -8,6 +8,13 @@ import { SponsorForm } from '@/components/forms/SponsorForm';
 import { sponsorService } from '@/services/sponsorService';
 import { StudentSponsor } from '@/types';
 
+/**
+ * Sponsor assignment detail / edit page.
+ *
+ * Fetches the assignment identified by the `[id]` route segment and renders a
+ * {@link SponsorForm} pre-populated with the current values. Re-fetches after
+ * a successful save so the form always reflects the latest server state.
+ */
 export default function SponsorDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<StudentSponsor | null>(null);
@@ -28,11 +35,11 @@ export default function SponsorDetailPage() {
   }, [load]);
 
   if (loading) {
-    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">Yuklanmoqda...</div>;
+    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">Loading...</div>;
   }
 
   if (!data) {
-    return <div className="rounded-xl bg-white p-6 text-sm text-gray-500">Topilmadi</div>;
+    return <div className="rounded-xl bg-white p-6 text-sm text-gray-500">Record not found</div>;
   }
 
   return (

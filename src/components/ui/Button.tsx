@@ -1,11 +1,23 @@
 import { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
+/** Props accepted by the Button component, extending native button attributes. */
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+  /** Visual style variant. Defaults to `"primary"`. */
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  /** Size preset. Defaults to `"md"`. */
   size?: 'sm' | 'md';
 };
 
+/**
+ * A styled button component with multiple visual variants and sizes.
+ *
+ * Forwards all native `<button>` attributes to the underlying element.
+ *
+ * @param variant  - `"primary"` | `"secondary"` | `"danger"` | `"ghost"`. Default `"primary"`.
+ * @param size     - `"md"` | `"sm"`. Default `"md"`.
+ * @param className - Additional Tailwind classes merged onto the root element.
+ */
 export function Button({ className, variant = 'primary', size = 'md', ...props }: Props) {
   return (
     <button

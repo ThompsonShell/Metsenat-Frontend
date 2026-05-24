@@ -8,6 +8,13 @@ import { AppealForm } from '@/components/forms/AppealForm';
 import { appealService } from '@/services/appealService';
 import { Appeal } from '@/types';
 
+/**
+ * Appeal detail / edit page.
+ *
+ * Fetches the appeal identified by the `[id]` route segment and renders an
+ * {@link AppealForm} pre-populated with the current values. Re-fetches after a
+ * successful save so the form always reflects the latest server state.
+ */
 export default function AppealDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [appeal, setAppeal] = useState<Appeal | null>(null);
@@ -28,11 +35,11 @@ export default function AppealDetailPage() {
   }, [load]);
 
   if (loading) {
-    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">Yuklanmoqda...</div>;
+    return <div className="flex items-center justify-center py-16 text-sm text-gray-400">Loading...</div>;
   }
 
   if (!appeal) {
-    return <div className="rounded-xl bg-white p-6 text-sm text-gray-500">Ariza topilmadi</div>;
+    return <div className="rounded-xl bg-white p-6 text-sm text-gray-500">Appeal not found</div>;
   }
 
   return (
@@ -44,7 +51,7 @@ export default function AppealDetailPage() {
         >
           <ArrowLeft size={16} />
         </Link>
-        <h2 className="text-xl font-semibold text-gray-900">Ariza #{appeal.id}</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Appeal #{appeal.id}</h2>
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-card">

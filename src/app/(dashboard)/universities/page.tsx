@@ -9,6 +9,12 @@ import { TBody, THead, Table } from '@/components/ui/Table';
 import { generalService } from '@/services/generalService';
 import { University } from '@/types';
 
+/**
+ * Universities list page.
+ *
+ * Displays all universities in a table with a delete action per row, and
+ * opens a modal to create new universities via {@link UniversityForm}.
+ */
 export default function UniversitiesPage() {
   const [universities, setUniversities] = useState<University[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +26,7 @@ export default function UniversitiesPage() {
       const data = await generalService.listUniversities();
       setUniversities(data);
     } catch {
-      alert('Universitetlarni yuklashda xatolik');
+      alert('Failed to load universities. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -31,7 +37,7 @@ export default function UniversitiesPage() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    if (!confirm("O'chirishni tasdiqlaysizmi?")) {
+    if (!confirm('Are you sure you want to delete this university?')) {
       return;
     }
 
@@ -39,30 +45,30 @@ export default function UniversitiesPage() {
       await generalService.deleteUniversity(id);
       load();
     } catch {
-      alert("O'chirishda xatolik");
+      alert('Failed to delete university. Please try again.');
     }
   };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">Universitetlar</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Universities</h2>
         <Button onClick={() => setOpenCreate(true)} className="flex items-center gap-1.5">
           <Plus size={15} />
-          Qo&apos;shish
+          Add
         </Button>
       </div>
 
       <div className="rounded-xl bg-white border border-gray-100 shadow-card">
         {loading && (
-          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Yuklanmoqda...</div>
+          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Loading...</div>
         )}
 
         <div className="overflow-auto">
           <Table>
             <THead>
               <tr>
-                {['#', 'Nomi', 'Kontrakt summasi', 'Slug', 'Amallar'].map((head) => (
+                {['#', 'Name', 'Contract Amount', 'Slug', 'Actions'].map((head) => (
                   <th key={head} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     {head}
                   </th>
@@ -89,7 +95,7 @@ export default function UniversitiesPage() {
               {!loading && universities.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-4 py-10 text-center text-sm text-gray-400">
-                    Universitetlar topilmadi
+                    No universities found
                   </td>
                 </tr>
               )}
@@ -98,7 +104,7 @@ export default function UniversitiesPage() {
         </div>
       </div>
 
-      <Modal open={openCreate} title="Universitet qo&apos;shish" onClose={() => setOpenCreate(false)}>
+      <Modal open={openCreate} title="Add university" onClose={() => setOpenCreate(false)}>
         <UniversityForm
           onSuccess={() => {
             setOpenCreate(false);

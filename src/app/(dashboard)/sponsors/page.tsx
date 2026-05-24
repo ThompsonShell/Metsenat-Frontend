@@ -12,6 +12,12 @@ import { useSponsors } from '@/hooks/useSponsors';
 import { formatDate } from '@/lib/utils';
 import { sponsorService } from '@/services/sponsorService';
 
+/**
+ * Sponsor assignments list page.
+ *
+ * Provides filter inputs (sponsor ID, student ID, amount range), a data table
+ * with view/delete actions per row, and a modal to create new assignments.
+ */
 export default function SponsorsPage() {
   const [sponsor, setSponsor] = useState('');
   const [student, setStudent] = useState('');
@@ -27,7 +33,7 @@ export default function SponsorsPage() {
   });
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Ma'lumotni o'chirasizmi?")) {
+    if (!confirm('Are you sure you want to delete this record?')) {
       return;
     }
 
@@ -35,30 +41,30 @@ export default function SponsorsPage() {
       await sponsorService.delete(id);
       refetch();
     } catch {
-      alert("O'chirishda xatolik");
+      alert('Failed to delete record. Please try again.');
     }
   };
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">Sponsorlar</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Sponsors</h2>
         <Button onClick={() => setOpenCreate(true)} className="flex items-center gap-1.5">
           <Plus size={15} />
-          Qo&apos;shish
+          Add
         </Button>
       </div>
 
       <div className="rounded-xl bg-white border border-gray-100 shadow-card">
         <div className="grid grid-cols-1 gap-3 p-4 md:grid-cols-4 border-b border-gray-50">
           <Input placeholder="Sponsor ID" value={sponsor} onChange={(e) => setSponsor(e.target.value)} />
-          <Input placeholder="Talaba ID" value={student} onChange={(e) => setStudent(e.target.value)} />
-          <Input placeholder="Summa >=" value={amountFrom} onChange={(e) => setAmountFrom(e.target.value)} />
-          <Input placeholder="Summa <=" value={amountTo} onChange={(e) => setAmountTo(e.target.value)} />
+          <Input placeholder="Student ID" value={student} onChange={(e) => setStudent(e.target.value)} />
+          <Input placeholder="Amount >=" value={amountFrom} onChange={(e) => setAmountFrom(e.target.value)} />
+          <Input placeholder="Amount <=" value={amountTo} onChange={(e) => setAmountTo(e.target.value)} />
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Yuklanmoqda...</div>
+          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Loading...</div>
         )}
         {error && (
           <div className="m-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
@@ -68,7 +74,7 @@ export default function SponsorsPage() {
           <Table>
             <THead>
               <tr>
-                {['#', 'Sponsor', 'Talaba', 'Summa', 'Sana', 'Amallar'].map((head) => (
+                {['#', 'Sponsor', 'Student', 'Amount', 'Date', 'Actions'].map((head) => (
                   <th key={head} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     {head}
                   </th>
@@ -104,7 +110,7 @@ export default function SponsorsPage() {
               {!loading && sponsors.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-4 py-10 text-center text-sm text-gray-400">
-                    Sponsorlar topilmadi
+                    No sponsors found
                   </td>
                 </tr>
               )}
@@ -113,7 +119,7 @@ export default function SponsorsPage() {
         </div>
       </div>
 
-      <Modal open={openCreate} onClose={() => setOpenCreate(false)} title="Sponsor qo&apos;shish">
+      <Modal open={openCreate} onClose={() => setOpenCreate(false)} title="Add sponsor assignment">
         <SponsorForm
           onSuccess={() => {
             setOpenCreate(false);

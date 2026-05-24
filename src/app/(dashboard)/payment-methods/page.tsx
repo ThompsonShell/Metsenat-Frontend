@@ -9,11 +9,19 @@ import { TBody, THead, Table } from '@/components/ui/Table';
 import { generalService } from '@/services/generalService';
 import { PaymentMethod } from '@/types';
 
+/** Form values for the inline "add payment method" form. */
 interface FormValues {
   name: string;
   slug: string;
 }
 
+/**
+ * Payment methods management page.
+ *
+ * Displays all existing payment methods in a table and provides an inline
+ * form at the top to create new ones. The list re-fetches automatically after
+ * a successful create.
+ */
 export default function PaymentMethodsPage() {
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +33,7 @@ export default function PaymentMethodsPage() {
       const data = await generalService.listPaymentMethods();
       setMethods(data);
     } catch {
-      alert("To'lov usullarini yuklashda xatolik");
+      alert('Failed to load payment methods. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -41,36 +49,36 @@ export default function PaymentMethodsPage() {
       reset();
       load();
     } catch {
-      alert('Saqlashda xatolik');
+      alert('Failed to save payment method. Please try again.');
     }
   });
 
   return (
     <div className="space-y-5">
-      <h2 className="text-xl font-semibold text-gray-900">To&apos;lov usullari</h2>
+      <h2 className="text-xl font-semibold text-gray-900">Payment Methods</h2>
 
       <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-card">
-        <p className="mb-3 text-sm font-medium text-gray-700">Yangi to&apos;lov usuli qo&apos;shish</p>
+        <p className="mb-3 text-sm font-medium text-gray-700">Add new payment method</p>
         <form onSubmit={submit} className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <Input placeholder="Nomi" {...register('name', { required: true })} />
+          <Input placeholder="Name" {...register('name', { required: true })} />
           <Input placeholder="Slug" {...register('slug', { required: true })} />
           <Button type="submit" className="flex items-center gap-1.5">
             <Plus size={15} />
-            Qo&apos;shish
+            Add
           </Button>
         </form>
       </div>
 
       <div className="rounded-xl bg-white border border-gray-100 shadow-card">
         {loading && (
-          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Yuklanmoqda...</div>
+          <div className="flex items-center justify-center py-12 text-sm text-gray-400">Loading...</div>
         )}
 
         <div className="overflow-auto">
           <Table>
             <THead>
               <tr>
-                {['#', 'Nomi', 'Slug'].map((head) => (
+                {['#', 'Name', 'Slug'].map((head) => (
                   <th key={head} className="whitespace-nowrap px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     {head}
                   </th>
@@ -88,7 +96,7 @@ export default function PaymentMethodsPage() {
               {!loading && methods.length === 0 && (
                 <tr>
                   <td colSpan={3} className="px-4 py-10 text-center text-sm text-gray-400">
-                    To&apos;lov usullari topilmadi
+                    No payment methods found
                   </td>
                 </tr>
               )}

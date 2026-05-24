@@ -7,12 +7,23 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { sponsorService } from '@/services/sponsorService';
 
+/** Validation schema for the sponsor assignment form. */
 const schema = z.object({
   sponsor: z.coerce.number().positive(),
   student: z.coerce.number().positive(),
   amount: z.coerce.number().positive(),
 });
 
+/**
+ * Form for creating or editing a sponsor–student assignment.
+ *
+ * When `sponsorId` is provided the form patches the existing record;
+ * otherwise it creates a new one.
+ *
+ * @param onSuccess     - Called after a successful save.
+ * @param sponsorId     - ID of the assignment to update; omit for create mode.
+ * @param initialValues - Pre-fills the form fields (used in edit mode).
+ */
 export function SponsorForm({
   onSuccess,
   sponsorId,
@@ -36,7 +47,7 @@ export function SponsorForm({
       }
       onSuccess();
     } catch {
-      alert('Sponsor ma\'lumotini saqlashda xatolik');
+      alert('Failed to save sponsor record. Please try again.');
     }
   });
 
@@ -46,7 +57,7 @@ export function SponsorForm({
       <Input type="number" placeholder="Student ID" {...form.register('student')} />
       <Input type="number" placeholder="Amount" {...form.register('amount')} />
       <Button type="submit" className="md:col-span-2">
-        Saqlash
+        Save
       </Button>
     </form>
   );

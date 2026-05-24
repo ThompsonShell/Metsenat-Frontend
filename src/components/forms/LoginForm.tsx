@@ -12,14 +12,23 @@ import { UZ_PHONE_REGEX } from '@/lib/auth';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 
+/** Zod schema for the phone-number step. */
 const phoneSchema = z.object({
-  phone_number: z.string().regex(UZ_PHONE_REGEX, '+998XXXXXXXXX formatda kiriting'),
+  phone_number: z.string().regex(UZ_PHONE_REGEX, 'Enter in +998XXXXXXXXX format'),
 });
 
+/** Zod schema for the OTP verification step. */
 const codeSchema = z.object({
-  auth_code: z.string().regex(/^\d{4}$/, "Kod 4 raqamdan iborat bo'lishi kerak"),
+  auth_code: z.string().regex(/^\d{4}$/, 'Code must be exactly 4 digits'),
 });
 
+/**
+ * Two-step login form.
+ *
+ * **Step 1** – collects the user's Uzbek phone number and requests an OTP.
+ * **Step 2** – collects the 4-digit OTP, exchanges it for JWT tokens, and
+ *              redirects to `/dashboard` on success.
+ */
 export function LoginForm() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
@@ -43,7 +52,7 @@ export function LoginForm() {
       setPhone(values.phone_number);
       setStep(2);
     } catch {
-      alert('Kod yuborishda xatolik yuz berdi');
+      alert('Failed to send verification code. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -56,7 +65,7 @@ export function LoginForm() {
       setTokens(tokens.access_token, tokens.refresh_token);
       router.replace('/dashboard');
     } catch {
-      alert('Login xatoligi. Kodni qayta tekshiring');
+      alert('Login failed. Please check the code and try again.');
     } finally {
       setLoading(false);
     }
@@ -64,7 +73,6 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-sm">
-      {/* Logo */}
       <div className="mb-8 flex flex-col items-center">
         <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-lg">
           <span className="text-xl font-bold">M</span>
@@ -73,18 +81,17 @@ export function LoginForm() {
         <p className="mt-1 text-sm text-gray-500">Admin panel</p>
       </div>
 
-      {/* Card */}
       <div className="rounded-2xl bg-white p-8 shadow-card border border-gray-100">
         {step === 1 ? (
           <>
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Tizimga kirish</h2>
-              <p className="mt-1 text-sm text-gray-500">Telefon raqamingizni kiriting</p>
+              <h2 className="text-lg font-semibold text-gray-900">Sign in</h2>
+              <p className="mt-1 text-sm text-gray-500">Enter your phone number</p>
             </div>
             <form onSubmit={sendCode} className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                  Telefon raqam
+                  Phone number
                 </label>
                 <div className="relative">
                   <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -102,22 +109,22 @@ export function LoginForm() {
                 )}
               </div>
               <Button type="submit" disabled={loading} className="w-full">
-                {loading ? 'Yuborilmoqda...' : 'Kodni yuborish'}
+                {loading ? 'Sending...' : 'Send code'}
               </Button>
             </form>
           </>
         ) : (
           <>
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Kodni kiriting</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Enter code</h2>
               <p className="mt-1 text-sm text-gray-500">
-                <span className="font-medium text-brand">{phone}</span> raqamiga kod yuborildi
+                A code was sent to <span className="font-medium text-brand">{phone}</span>
               </p>
             </div>
             <form onSubmit={login} className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700">
-                  4 xonali kod
+                  4-digit code
                 </label>
                 <div className="relative">
                   <KeyRound size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -143,10 +150,10 @@ export function LoginForm() {
                   className="flex items-center gap-1.5"
                 >
                   <ArrowLeft size={15} />
-                  Orqaga
+                  Back
                 </Button>
                 <Button type="submit" disabled={loading} className="flex-1">
-                  {loading ? 'Kutilmoqda...' : 'Kirish'}
+                  {loading ? 'Verifying...' : 'Sign in'}
                 </Button>
               </div>
             </form>

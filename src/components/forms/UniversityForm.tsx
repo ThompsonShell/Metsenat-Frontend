@@ -7,12 +7,23 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { generalService } from '@/services/generalService';
 
+/** Validation schema for the university form. */
 const schema = z.object({
   name: z.string().min(2),
   slug: z.string().min(2),
   contract_amount: z.coerce.number().nonnegative(),
 });
 
+/**
+ * Form for creating or editing a university.
+ *
+ * When `universityId` is provided the form patches the existing record;
+ * otherwise it creates a new one. The form is reset after a successful create.
+ *
+ * @param onSuccess      - Called after a successful save.
+ * @param universityId   - ID of the university to update; omit for create mode.
+ * @param initialValues  - Pre-fills the form fields (used in edit mode).
+ */
 export function UniversityForm({
   onSuccess,
   universityId,
@@ -37,7 +48,7 @@ export function UniversityForm({
       onSuccess();
       form.reset();
     } catch {
-      alert('Universitetni saqlashda xatolik');
+      alert('Failed to save university. Please try again.');
     }
   });
 
@@ -47,7 +58,7 @@ export function UniversityForm({
       <Input placeholder="Slug" {...form.register('slug')} />
       <Input type="number" placeholder="Contract amount" {...form.register('contract_amount')} />
       <Button className="md:col-span-3" type="submit">
-        Saqlash
+        Save
       </Button>
     </form>
   );

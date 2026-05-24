@@ -4,6 +4,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { userService, UserFilters } from '@/services/userService';
 import { User } from '@/types';
 
+/**
+ * React hook that fetches and manages a paginated list of users.
+ *
+ * Re-fetches automatically whenever `filters` changes.
+ *
+ * @param filters - Query parameters forwarded to the user list API.
+ * @returns An object containing:
+ *   - `users`   – the current list of users (empty array while loading).
+ *   - `loading` – `true` while the request is in flight.
+ *   - `error`   – a user-facing error message, or `null` on success.
+ *   - `refetch` – a stable callback to manually trigger a re-fetch.
+ */
 export function useUsers(filters: UserFilters) {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +28,7 @@ export function useUsers(filters: UserFilters) {
       const data = await userService.list(filters);
       setUsers(data);
     } catch {
-      setError('Foydalanuvchilarni yuklashda xatolik yuz berdi');
+      setError('Failed to load users');
     } finally {
       setLoading(false);
     }

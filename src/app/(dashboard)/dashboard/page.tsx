@@ -5,6 +5,7 @@ import { Users, UserCheck, GraduationCap, FileText, Clock, CheckCircle, XCircle,
 import { useAppeals } from '@/hooks/useAppeals';
 import { useUsers } from '@/hooks/useUsers';
 
+/** Props for the reusable statistic card component. */
 interface StatCardProps {
   title: string;
   value: number;
@@ -13,6 +14,15 @@ interface StatCardProps {
   iconColor: string;
 }
 
+/**
+ * Displays a single KPI metric with an icon, a label, and a formatted number.
+ *
+ * @param title     - Short label for the metric.
+ * @param value     - Numeric value to display.
+ * @param icon      - Icon element rendered inside the coloured container.
+ * @param iconBg    - Tailwind background class for the icon container.
+ * @param iconColor - Tailwind text-colour class applied to the icon.
+ */
 function StatCard({ title, value, icon, iconBg, iconColor }: StatCardProps) {
   return (
     <div className="flex items-center gap-4 rounded-xl bg-white p-5 shadow-card border border-gray-100">
@@ -21,12 +31,19 @@ function StatCard({ title, value, icon, iconBg, iconColor }: StatCardProps) {
       </div>
       <div>
         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{title}</p>
-        <p className="mt-0.5 text-2xl font-bold text-gray-900">{value.toLocaleString('uz-UZ')}</p>
+        <p className="mt-0.5 text-2xl font-bold text-gray-900">{value.toLocaleString('en-US')}</p>
       </div>
     </div>
   );
 }
 
+/**
+ * Dashboard overview page.
+ *
+ * Fetches all users and appeals in parallel and derives summary statistics
+ * (total users, sponsors, students, appeals by status) using `useMemo`.
+ * Shows skeleton placeholders while data is loading.
+ */
 export default function DashboardPage() {
   const { users, loading: usersLoading } = useUsers({});
   const { appeals, loading: appealsLoading } = useAppeals({});
@@ -60,31 +77,31 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">Umumiy statistika</h2>
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">Overall Statistics</h2>
         <div className="grid gap-4 md:grid-cols-4">
           <StatCard
-            title="Jami foydalanuvchilar"
+            title="Total Users"
             value={stats.users}
             icon={<Users size={20} />}
             iconBg="bg-brand-light"
             iconColor="text-brand"
           />
           <StatCard
-            title="Sponsorlar"
+            title="Sponsors"
             value={stats.sponsors}
             icon={<UserCheck size={20} />}
             iconBg="bg-emerald-50"
             iconColor="text-emerald-600"
           />
           <StatCard
-            title="Talabalar"
+            title="Students"
             value={stats.students}
             icon={<GraduationCap size={20} />}
             iconBg="bg-purple-50"
             iconColor="text-purple-600"
           />
           <StatCard
-            title="Jami arizalar"
+            title="Total Appeals"
             value={stats.appeals}
             icon={<FileText size={20} />}
             iconBg="bg-amber-50"
@@ -94,31 +111,31 @@ export default function DashboardPage() {
       </div>
 
       <div>
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">Arizalar holati</h2>
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-gray-500">Appeals by Status</h2>
         <div className="grid gap-4 md:grid-cols-4">
           <StatCard
-            title="Yangi"
+            title="New"
             value={stats.newAppeals}
             icon={<Clock size={20} />}
             iconBg="bg-blue-50"
             iconColor="text-blue-600"
           />
           <StatCard
-            title="Moderatsiya"
+            title="Moderation"
             value={stats.moderationAppeals}
             icon={<AlertCircle size={20} />}
             iconBg="bg-amber-50"
             iconColor="text-amber-600"
           />
           <StatCard
-            title="Tasdiqlangan"
+            title="Confirmed"
             value={stats.confirmedAppeals}
             icon={<CheckCircle size={20} />}
             iconBg="bg-emerald-50"
             iconColor="text-emerald-600"
           />
           <StatCard
-            title="Bekor qilingan"
+            title="Cancelled"
             value={stats.cancelledAppeals}
             icon={<XCircle size={20} />}
             iconBg="bg-red-50"

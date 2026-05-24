@@ -1,6 +1,12 @@
 import { InputHTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
+/**
+ * A styled text input that merges the design-system base classes with any
+ * additional `className` provided by the caller.
+ *
+ * Forwards all native `<input>` attributes to the underlying element.
+ */
 export function Input(props: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { appealService } from '@/services/appealService';
 
+/** Validation schema for the appeal form fields. */
 const schema = z.object({
   phone_number: z.string().min(13),
   amount: z.coerce.number().positive(),
@@ -16,6 +17,17 @@ const schema = z.object({
   status: z.coerce.number().min(1).max(4),
 });
 
+/**
+ * Form for creating or editing a single appeal.
+ *
+ * When `appealId` is provided the form patches the existing record;
+ * otherwise it creates a new one.
+ *
+ * @param onSuccess      - Called after a successful save so the parent can
+ *                         close the modal or refresh the list.
+ * @param initialValues  - Pre-fills the form fields (used in edit mode).
+ * @param appealId       - ID of the appeal to update; omit for create mode.
+ */
 export function AppealForm({
   onSuccess,
   initialValues,
@@ -47,7 +59,7 @@ export function AppealForm({
       }
       onSuccess();
     } catch {
-      alert('Arizani saqlashda xatolik');
+      alert('Failed to save appeal. Please try again.');
     }
   });
 
@@ -60,7 +72,7 @@ export function AppealForm({
       <Input placeholder="Payment Method ID" type="number" {...form.register('payment_method')} />
       <Input placeholder="Status (1-4)" type="number" {...form.register('status')} />
       <Button type="submit" className="md:col-span-2">
-        Saqlash
+        Save
       </Button>
     </form>
   );

@@ -5,15 +5,23 @@ import { LogOut, Bell } from 'lucide-react';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/store/authStore';
 
+/** Maps route paths to their human-readable page titles shown in the navbar. */
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
-  '/users': 'Foydalanuvchilar',
-  '/appeals': 'Arizalar',
-  '/sponsors': 'Sponsorlar',
-  '/universities': 'Universitetlar',
-  '/payment-methods': "To'lov usullari",
+  '/users': 'Users',
+  '/appeals': 'Appeals',
+  '/sponsors': 'Sponsors',
+  '/universities': 'Universities',
+  '/payment-methods': 'Payment Methods',
 };
 
+/**
+ * Top navigation bar for the dashboard layout.
+ *
+ * Displays the title of the current page (derived from the pathname) and
+ * provides a logout button that calls the server-side logout endpoint before
+ * clearing local tokens and redirecting to `/login`.
+ */
 export function Navbar() {
   const logout = useAuthStore((state) => state.logout);
   const pathname = usePathname();
@@ -24,7 +32,7 @@ export function Navbar() {
     try {
       await authService.logout();
     } catch {
-      // Ignore backend logout failures
+      // Ignore backend logout failures – clear local state regardless.
     }
     logout();
     window.location.href = '/login';
@@ -42,7 +50,7 @@ export function Navbar() {
           className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 transition"
         >
           <LogOut size={15} />
-          Chiqish
+          Log out
         </button>
       </div>
     </header>

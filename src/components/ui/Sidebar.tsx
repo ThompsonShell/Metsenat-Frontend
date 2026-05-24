@@ -5,12 +5,26 @@ import { usePathname } from 'next/navigation';
 import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
+/** Describes a single navigation item rendered in the sidebar. */
 export interface SidebarItem {
+  /** The target URL for this navigation link. */
   href: string;
+  /** Human-readable label displayed next to the icon. */
   label: string;
+  /** Optional icon element rendered before the label. */
   icon?: ReactNode;
 }
 
+/**
+ * A vertical navigation sidebar.
+ *
+ * Highlights the active link by comparing the current pathname against each
+ * item's `href`. Any `href` other than `/dashboard` is matched as a prefix so
+ * that nested routes (e.g. `/appeals/123`) keep the parent item highlighted.
+ *
+ * @param items - Navigation items to render.
+ * @param logo  - Optional custom logo node; falls back to the default "M" brand mark.
+ */
 export function Sidebar({ items, logo }: { items: SidebarItem[]; logo?: ReactNode }) {
   const pathname = usePathname();
 

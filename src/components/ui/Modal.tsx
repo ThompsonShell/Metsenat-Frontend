@@ -1,6 +1,16 @@
 import { ReactNode } from 'react';
 import { X } from 'lucide-react';
 
+/**
+ * A centred overlay modal dialog.
+ *
+ * Renders nothing when `open` is `false`, avoiding unnecessary DOM nodes.
+ *
+ * @param open     - Whether the modal is visible.
+ * @param title    - Heading text displayed in the modal header.
+ * @param onClose  - Callback invoked when the user clicks the close (×) button.
+ * @param children - Content rendered inside the modal body.
+ */
 export function Modal({
   open,
   title,
