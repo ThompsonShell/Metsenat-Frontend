@@ -10,11 +10,14 @@ import { useAuthStore } from '@/store/authStore';
  * Use this hook in components that need to read authentication state or
  * trigger login/logout without manually calling `loadFromStorage`.
  *
+ * `loadFromStorage` is a stable Zustand action reference so it only triggers
+ * the effect once after the component mounts.
+ *
  * @returns The Zustand auth store slice (tokens, `isAuthenticated`, and actions).
  */
 export function useAuth() {
-  const loadFromStorage = useAuthStore((s) => s.loadFromStorage);
   const store = useAuthStore();
+  const { loadFromStorage } = store;
 
   useEffect(() => {
     loadFromStorage();
