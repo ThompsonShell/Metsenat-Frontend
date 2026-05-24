@@ -47,7 +47,7 @@ export const appealService = {
       }
     }
 
-    const { data } = await api.patch<Appeal>(`/appeals/${id}update`, payload);
+    const { data } = await api.patch<Appeal>(`/appeals/${id}/update/`, payload);
     return data;
   },
 
@@ -61,6 +61,6 @@ export const appealService = {
       }
     }
 
-    await api.delete(`/appeals/${id}delete`);
+    await api.delete(`/appeals/${id}/delete/`);
   },
 };
