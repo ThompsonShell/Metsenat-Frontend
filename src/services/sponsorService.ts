@@ -41,7 +41,7 @@ export const sponsorService = {
       }
     }
 
-    const { data } = await api.patch<StudentSponsor>(`/sponsors/${id}update`, payload);
+    const { data } = await api.patch<StudentSponsor>(`/sponsors/${id}/update/`, payload);
     return data;
   },
 
@@ -55,6 +55,6 @@ export const sponsorService = {
       }
     }
 
-    await api.delete(`/sponsors/${id}delete`);
+    await api.delete(`/sponsors/${id}/delete/`);
   },
 };

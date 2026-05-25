@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatMoney(value: string | number) {
   const number = Number(value || 0);
-  return new Intl.NumberFormat('uz-UZ').format(number);
+  return new Intl.NumberFormat('en-US').format(number);
 }
 
 export function formatDate(value?: string) {
@@ -14,5 +14,5 @@ export function formatDate(value?: string) {
     return '-';
   }
 
-  return new Date(value).toLocaleString('uz-UZ');
+  return new Date(value).toLocaleString('en-US');
 }

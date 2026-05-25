@@ -29,7 +29,7 @@ export const generalService = {
       }
     }
 
-    const { data } = await api.patch<University>(`/general/${id}update`, payload);
+    const { data } = await api.patch<University>(`/general/${id}/update/`, payload);
     return data;
   },
 
@@ -43,7 +43,7 @@ export const generalService = {
       }
     }
 
-    await api.delete(`/general/${id}delete`);
+    await api.delete(`/general/${id}/delete/`);
   },
 
   listPaymentMethods: async () => {
